@@ -1,5 +1,5 @@
 (ns hello-lwjgl.core
-  (:import (org.lwjgl.opengl Display DisplayMode GL11)
+  (:import (org.lwjgl.opengl ContextAttribs Display DisplayMode GL11 PixelFormat)
           (org.lwjgl.util.glu GLU))
   (:gen-class))
 
@@ -20,6 +20,7 @@
 
 (defn alpha-init-gl
   []
+  (println "OpenGL version:" (GL11/glGetString GL11/GL_VERSION))
   (GL11/glClearColor 0.0 0.0 0.0 0.0)
   (GL11/glMatrixMode GL11/GL_PROJECTION)
   (GLU/gluOrtho2D 0.0 (:width @alpha-globals)
@@ -88,12 +89,51 @@
   (.start (Thread. alpha-run)))
 
 ;; ======================================================================
+;; beta - TODO
+;;   do the same thing in OpenGL 3.2
+(defn beta-init-window
+  [width height title]
+  (let [pixel-format (PixelFormat.)
+        context-attributes (-> (ContextAttribs. 3 2)
+                               (.withForwardCompatible true)
+                               (.withProfileCore true))]
+  (def beta-globals (ref {:width width
+                           :height height
+                           :title title
+                           :angle 0.0
+                           :next-time (System/currentTimeMillis)
+                           :last-time (System/currentTimeMillis)}))
+  (Display/setDisplayMode (DisplayMode. width height))
+  (Display/setTitle title)
+  (println pixel-format context-attributes)
+  (Display/create pixel-format context-attributes)))
+
+(defn beta-init-gl
+  []
+  (println "OpenGL version:" (GL11/glGetString GL11/GL_VERSION)))
+
+(defn beta-run
+  []
+  (beta-init-window 800 600 "beta")
+  (beta-init-gl)
+  (Thread/sleep 2000)
+  ;;(while (not (Display/isCloseRequested))
+  ;;  (beta-update)
+  ;;  (Display/update))
+  (Display/destroy))
+
+(defn beta-main []
+  (println "Run example Beta")
+  (.start (Thread. beta-run)))
+
+;; ======================================================================
 (defn -main
   "main entry point."
   [& args]
   (println "Hello, Lightweight Java Game Library!")
   (cond
    (= "alpha" (first args)) (alpha-main)
+   (= "beta" (first args)) (beta-main)
    true (alpha-main)))
 ;;(-main ["alpha"])
 ;;@alpha-globals
