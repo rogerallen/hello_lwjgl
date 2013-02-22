@@ -115,23 +115,23 @@
                   [1.000  0.000 0.0 1.0
                    -0.50  0.866 0.0 1.0
                    -0.50 -0.866 0.0 1.0])
-        vertices-buffer (BufferUtils/createFloatBuffer (count vertices))
-        _ (.put vertices-buffer vertices)
-        _ (.flip vertices-buffer)
+        vertices-buffer (-> (BufferUtils/createFloatBuffer (count vertices))
+                            (.put vertices)
+                            (.flip))
         colors (float-array
                 [1.0 0.0 0.0
                  0.0 1.0 0.0
                  0.0 0.0 1.0])
-        colors-buffer (BufferUtils/createFloatBuffer (count colors))
-        _ (.put colors-buffer colors)
-        _ (.flip colors-buffer)
+        colors-buffer (-> (BufferUtils/createFloatBuffer (count colors))
+                           (.put colors)
+                           (.flip))
         indices (byte-array
                  (map byte
                       [0 1 2])) ;; otherwise it whines about longs
         indices-count (count indices)
-        indices-buffer (BufferUtils/createByteBuffer (count indices))
-        _ (.put indices-buffer indices)
-        _ (.flip indices-buffer)
+        indices-buffer (-> (BufferUtils/createByteBuffer indices-count)
+                           (.put indices)
+                           (.flip))
         ;; create & bind Vertex Array Object
         vao-id (GL30/glGenVertexArrays)
         _ (GL30/glBindVertexArray vao-id)
@@ -139,7 +139,7 @@
         vbo-id (GL15/glGenBuffers)
         _ (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER vbo-id)
         _ (GL15/glBufferData GL15/GL_ARRAY_BUFFER vertices-buffer GL15/GL_STATIC_DRAW)
-        _ (GL20/glVertexAttribPointer 0 3 GL11/GL_FLOAT false 0 0)
+        _ (GL20/glVertexAttribPointer 0 4 GL11/GL_FLOAT false 0 0)
         _ (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER 0)
         ;; create & bind VBO for colors
         vboc-id (GL15/glGenBuffers)
@@ -179,17 +179,16 @@
        ))
 
 (def beta-fs-shader
-  (str
-   "#version 150 core\n"
-   "\n"
-   "in vec4 pass_Color;\n"
-   "\n"
-   "out vec4 out_Color;\n"
-   "\n"
-   "void main(void) {\n"
-   "    out_Color = pass_Color;\n"
-   "}\n"
-   ))
+  (str "#version 150 core\n"
+       "\n"
+       "in vec4 pass_Color;\n"
+       "\n"
+       "out vec4 out_Color;\n"
+       "\n"
+       "void main(void) {\n"
+       "    out_Color = pass_Color;\n"
+       "}\n"
+       ))
                      
 (defn load-shader
   [shader-str shader-type]
@@ -221,7 +220,7 @@
     (let [{:keys [width height]} @beta-globals]
       (println "OpenGL version:" (GL11/glGetString GL11/GL_VERSION))
       (GL11/glClearColor 0.5 0.5 0.5 0.0)
-      (GL11/glViewport 0 width 0 height)
+      (GL11/glViewport 0 0 width height)
       (beta-init-buffers)
       (beta-init-shaders)
       (print "@beta-globals")
