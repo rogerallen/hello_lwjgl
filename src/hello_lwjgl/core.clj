@@ -84,13 +84,14 @@
   (Display/destroy))
 
 (defn alpha-main []
+  (println "Run example Alpha")
   (.start (Thread. alpha-run)))
 
 ;; ======================================================================
 (defn -main
   "main entry point."
   [& args]
-  (println "Hello, World!")
+  (println "Hello, Lightweight Java Game Library!")
   (cond
    (= "alpha" (first args)) (alpha-main)
    true (alpha-main)))
