@@ -67,8 +67,8 @@
   (init-gl)
   (while (not (Display/isCloseRequested))
     (update)
-    (Display/sync 60)
-    (Display/update))
+    (Display/update)
+    (Display/sync 60))
   (Display/destroy))
 
 (defn main

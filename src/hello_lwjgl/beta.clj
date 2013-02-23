@@ -254,8 +254,8 @@
   (Thread/sleep 2000)
   (while (not (Display/isCloseRequested))
     (update)
-    (Display/sync 60)
-    (Display/update))
+    (Display/update)
+    (Display/sync 60))
   (destroy-gl)
   (Display/destroy))
 
