@@ -45,9 +45,14 @@ To link in natives, until Leiningen gets better...do this for your platform.
 
 ## Usage
 
-To see a spinning triangle
+A spinning triangle that uses OpenGL 1.1
 ```bash
 > lein run alpha
+```
+
+A spinning triangle that uses OpenGL 3.2
+```bash
+> lein run beta
 ```
 
 ## License
