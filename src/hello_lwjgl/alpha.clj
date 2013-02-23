@@ -5,14 +5,14 @@
            (org.lwjgl.util.glu GLU)))
 
 ;; ======================================================================
-;; behold, a simple, old-fashioned (OpenGL 1.1) spinning triangle
+;; spinning triangle in OpenGL 1.1
 (defn init-window
   [width height title]
   (def globals (ref {:width width
-                           :height height
-                           :title title
-                           :angle 0.0
-                           :last-time (System/currentTimeMillis)}))
+                     :height height
+                     :title title
+                     :angle 0.0
+                     :last-time (System/currentTimeMillis)}))
   (Display/setDisplayMode (DisplayMode. width height))
   (Display/setTitle title)
   (Display/create))
@@ -73,7 +73,7 @@
     (Display/update))
   (Display/destroy))
 
-(defn main []
+(defn main
+  []
   (println "Run example Alpha")
   (.start (Thread. run)))
-

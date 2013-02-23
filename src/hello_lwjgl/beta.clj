@@ -6,7 +6,8 @@
            (org.lwjgl.util.glu GLU)))
 
 ;; ======================================================================
-;; spinning triangle in OpenGL 3.2 (progress?)
+;; spinning triangle in OpenGL 3.2
+;; >250 lines vs. <100 lines...progress?
 (defn init-window
   [width height title]
   (let [pixel-format (PixelFormat.)
@@ -15,26 +16,27 @@
                                (.withProfileCore true))
         current-time-millis (System/currentTimeMillis)]
     (def globals (ref {:width width
-                            :height height
-                            :title title
-                            :angle 0.0
-                            :last-time current-time-millis
-                            ;; geom ids
-                            :vao-id 0
-                            :vbo-id 0
-                            :vboc-id 0
-                            :vboi-id 0
-                            :indices-count 0
-                            ;; shader program ids
-                            :vs-id 0
-                            :fs-id 0
-                            :p-id 0
-                            ::angle-loc 0}))
+                       :height height
+                       :title title
+                       :angle 0.0
+                       :last-time current-time-millis
+                       ;; geom ids
+                       :vao-id 0
+                       :vbo-id 0
+                       :vboc-id 0
+                       :vboi-id 0
+                       :indices-count 0
+                       ;; shader program ids
+                       :vs-id 0
+                       :fs-id 0
+                       :p-id 0
+                       ::angle-loc 0}))
     (Display/setDisplayMode (DisplayMode. width height))
     (Display/setTitle title)
     (Display/create pixel-format context-attributes)))
 
-(defn init-buffers []
+(defn init-buffers
+  []
   ;; FIXME – DRY!
   (let [vertices (float-array
                   [0.500  0.000 0.0 1.0
@@ -48,8 +50,8 @@
                  0.0 1.0 0.0
                  0.0 0.0 1.0])
         colors-buffer (-> (BufferUtils/createFloatBuffer (count colors))
-                           (.put colors)
-                           (.flip))
+                          (.put colors)
+                          (.flip))
         indices (byte-array
                  (map byte
                       [0 1 2])) ;; otherwise it whines about longs
@@ -81,13 +83,13 @@
         _ (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER 0)
         ;;_ (println "init-buffers errors?" (GL11/glGetError))
         ]
-        (dosync (ref-set globals
-                         (assoc @globals
-                           :vao-id vao-id
-                           :vbo-id vbo-id
-                           :vboc-id vboc-id
-                           :vboi-id vboi-id
-                           :indices-count indices-count)))))
+    (dosync (ref-set globals
+                     (assoc @globals
+                       :vao-id vao-id
+                       :vbo-id vbo-id
+                       :vboc-id vboc-id
+                       :vboi-id vboi-id
+                       :indices-count indices-count)))))
 
 (def vs-shader
   (str "#version 150 core\n"
@@ -132,7 +134,8 @@
         ]
     shader-id))
 
-(defn init-shaders []
+(defn init-shaders
+  []
   (let [vs-id (load-shader vs-shader GL20/GL_VERTEX_SHADER)
         fs-id (load-shader fs-shader GL20/GL_FRAGMENT_SHADER)
         p-id (GL20/glCreateProgram)
@@ -142,56 +145,56 @@
         angle-loc (GL20/glGetUniformLocation p-id "in_Angle")
         ;;_ (println "init-shaders errors?" (GL11/glGetError))
         ]
-        (dosync (ref-set globals
-                         (assoc @globals
-                           :vs-id vs-id
-                           :fs-id fs-id
-                           :p-id p-id
-                           :angle-loc angle-loc)))))
+    (dosync (ref-set globals
+                     (assoc @globals
+                       :vs-id vs-id
+                       :fs-id fs-id
+                       :p-id p-id
+                       :angle-loc angle-loc)))))
 
-  (defn init-gl
-    []
-    (let [{:keys [width height]} @globals]
-      (println "OpenGL version:" (GL11/glGetString GL11/GL_VERSION))
-      (GL11/glClearColor 0.0 0.0 0.0 0.0)
-      (GL11/glViewport 0 0 width height)
-      (init-buffers)
-      (init-shaders)
-      ;;(print "@globals")
-      ;;(pprint/pprint @globals)
-      ;;(println "")
-      ))
+(defn init-gl
+  []
+  (let [{:keys [width height]} @globals]
+    (println "OpenGL version:" (GL11/glGetString GL11/GL_VERSION))
+    (GL11/glClearColor 0.0 0.0 0.0 0.0)
+    (GL11/glViewport 0 0 width height)
+    (init-buffers)
+    (init-shaders)
+    ;;(print "@globals")
+    ;;(pprint/pprint @globals)
+    ;;(println "")
+    ))
 
-  (defn draw
-    []
-    (let [{:keys [width height angle angle-loc
-                  p-id vao-id vboi-id
-                  indices-count]} @globals
-          w2 (/ width 2.0)
-          h2 (/ height 2.0)]
-      (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT  GL11/GL_DEPTH_BUFFER_BIT))
+(defn draw
+  []
+  (let [{:keys [width height angle angle-loc
+                p-id vao-id vboi-id
+                indices-count]} @globals
+                w2 (/ width 2.0)
+                h2 (/ height 2.0)]
+    (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT  GL11/GL_DEPTH_BUFFER_BIT))
 
-      (GL20/glUseProgram p-id)
-      ;; setup our uniform
-      (GL20/glUniform1f angle-loc angle)
-      ;; Bind to the VAO that has all the information about the
-      ;; vertices
-      (GL30/glBindVertexArray vao-id)
-      (GL20/glEnableVertexAttribArray 0)
-      (GL20/glEnableVertexAttribArray 1)
-      ;; Bind to the index VBO that has all the information about the
-      ;; order of the vertices
-      (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER vboi-id)
-      ;; Draw the vertices
-      (GL11/glDrawElements GL11/GL_TRIANGLES indices-count GL11/GL_UNSIGNED_BYTE 0)
-      ;; Put everything back to default (deselect)
-      (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER 0)
-      (GL20/glDisableVertexAttribArray 0)
-      (GL20/glDisableVertexAttribArray 1)
-      (GL30/glBindVertexArray 0)
-      (GL20/glUseProgram 0)
-      ;;(println "draw errors?" (GL11/glGetError))
-      ))
+    (GL20/glUseProgram p-id)
+    ;; setup our uniform
+    (GL20/glUniform1f angle-loc angle)
+    ;; Bind to the VAO that has all the information about the
+    ;; vertices
+    (GL30/glBindVertexArray vao-id)
+    (GL20/glEnableVertexAttribArray 0)
+    (GL20/glEnableVertexAttribArray 1)
+    ;; Bind to the index VBO that has all the information about the
+    ;; order of the vertices
+    (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER vboi-id)
+    ;; Draw the vertices
+    (GL11/glDrawElements GL11/GL_TRIANGLES indices-count GL11/GL_UNSIGNED_BYTE 0)
+    ;; Put everything back to default (deselect)
+    (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER 0)
+    (GL20/glDisableVertexAttribArray 0)
+    (GL20/glDisableVertexAttribArray 1)
+    (GL30/glBindVertexArray 0)
+    (GL20/glUseProgram 0)
+    ;;(println "draw errors?" (GL11/glGetError))
+    ))
 
 (defn update
   []
@@ -208,7 +211,8 @@
                        :last-time cur-time)))
     (draw)))
 
-(defn destroy-gl [] nil
+(defn destroy-gl
+  []
   (let [{:keys [p-id vs-id fs-id vao-id vbo-id vboc-id vboi-id]} @globals]
     ;; Delete the shaders
     (GL20/glUseProgram 0)
