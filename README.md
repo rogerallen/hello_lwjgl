@@ -37,9 +37,17 @@ Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-o
 
 To link in natives, until Leiningen gets better...do this for your platform.
 
+### Mac 
 ```bash
 > mkdir -p target/native/macosx/x86_64
 > cd target/native/macosx/x86_64
+> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar
+```
+
+### Linux
+```bash
+> mkdir -p target/native/linux/x86_64
+> cd target/native/linux/x86_64
 > jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar
 ```
 
