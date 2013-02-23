@@ -45,14 +45,21 @@ To link in natives, until Leiningen gets better...do this for your platform.
 
 ## Usage
 
-A spinning triangle that uses OpenGL 1.1
+All of these are very basic examples.
+
+Alpha: A spinning triangle that uses OpenGL 1.1
 ```bash
 > lein run alpha
 ```
 
-A spinning triangle that uses OpenGL 3.2
+Beta: A spinning triangle that uses OpenGL 3.2
 ```bash
 > lein run beta
+```
+
+Gamma: A fullscreen spinning triangle that you can move with a keyboard
+```bash
+> lein run gamma
 ```
 
 ## License
