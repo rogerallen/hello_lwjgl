@@ -1,7 +1,5 @@
 (ns hello-lwjgl.alpha
-  (:import (java.nio ByteBuffer FloatBuffer)
-           (org.lwjgl BufferUtils)
-           (org.lwjgl.opengl ContextAttribs Display DisplayMode GL11 GL15 GL20 GL30 PixelFormat)
+  (:import (org.lwjgl.opengl Display DisplayMode GL11)
            (org.lwjgl.util.glu GLU)))
 
 ;; ======================================================================
