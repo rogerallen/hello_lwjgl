@@ -233,7 +233,7 @@
       (GL11/glViewport 0 0 width height)
       (beta-init-buffers)
       (beta-init-shaders)
-      (print "@beta-globals")
+      ;;(print "@beta-globals")
       ;;(pprint/pprint @beta-globals)
       ;;(println "")
       ))
