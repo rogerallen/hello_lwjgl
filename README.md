@@ -14,6 +14,47 @@ Here's what I did
 See project.clj for my additions.  Note that fixing Leiningen is happening here:
 https://github.com/technomancy/leiningen/issues/898
 
+To link in natives, until Leiningen gets better...do this for your platform.
+
+### Mac 
+```bash
+> mkdir -p target/native/macosx/x86_64
+> cd target/native/macosx/x86_64
+> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar
+```
+
+### Linux
+```bash
+> mkdir -p target/native/linux/x86_64
+> cd target/native/linux/x86_64
+> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-linux.jar
+```
+
+## Usage
+
+All of these are very basic examples.
+
+### alpha
+A spinning triangle that uses OpenGL 1.1
+### beta
+A spinning triangle that uses OpenGL 3.2
+### gamma
+A fullscreen spinning triangle that you can move with a keyboard
+
+To run these examples, just add the name to the lein run commandline.
+E.g. to run the 'alpha' test:
+
+```bash 
+> lein run alpha
+```
+
+## To Do
+
+* Try out leiningen on windows to confirm it works.
+* Figure out `lein uberjar` and how to create a native mac/win/linux app.
+
+## Notes
+
 Keeping this list around for future potential issues...
 
 ```bash
@@ -33,41 +74,6 @@ Retrieving net/java/jutils/jutils/1.0.0/jutils-1.0.0.jar from central
 Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-linux.jar from central
 Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-windows.jar from central
 Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-osx.jar from central
-```
-
-To link in natives, until Leiningen gets better...do this for your platform.
-
-### Mac 
-```bash
-> mkdir -p target/native/macosx/x86_64
-> cd target/native/macosx/x86_64
-> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar
-```
-
-### Linux
-```bash
-> mkdir -p target/native/linux/x86_64
-> cd target/native/linux/x86_64
-> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar
-```
-
-## Usage
-
-All of these are very basic examples.
-
-Alpha: A spinning triangle that uses OpenGL 1.1
-```bash
-> lein run alpha
-```
-
-Beta: A spinning triangle that uses OpenGL 3.2
-```bash
-> lein run beta
-```
-
-Gamma: A fullscreen spinning triangle that you can move with a keyboard
-```bash
-> lein run gamma
 ```
 
 ## License
