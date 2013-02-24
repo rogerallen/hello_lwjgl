@@ -55,7 +55,9 @@ E.g. to run the 'alpha' test:
 
 ## Notes
 
-Keeping this list around for future potential issues...
+* found this helpful example: https://github.com/honeytree/clojure-lwjgl
+* found this discussion: https://groups.google.com/forum/#!msg/leiningen/MAFbNqDYT78/Ub2scaa4RCoJ
+* Keeping this list around for future potential issues...
 
 ```bash
 > lein deps
