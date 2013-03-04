@@ -1,5 +1,5 @@
 (ns hello-lwjgl.gamma
-  (:import (org.lwjgl.input Keyboard)
+  (:import (org.lwjgl.input Keyboard Mouse)
            (org.lwjgl.opengl Display DisplayMode GL11)
            (org.lwjgl.util.glu GLU)))
 
@@ -62,10 +62,14 @@
   []
   (let [{:keys [tri-x tri-y]} @globals
         make-inactive (Keyboard/isKeyDown Keyboard/KEY_ESCAPE)
-        up (Keyboard/isKeyDown Keyboard/KEY_UP)
-        down (Keyboard/isKeyDown Keyboard/KEY_DOWN)
-        left (Keyboard/isKeyDown Keyboard/KEY_LEFT)
-        right (Keyboard/isKeyDown Keyboard/KEY_RIGHT)
+        up (or (Keyboard/isKeyDown Keyboard/KEY_UP)
+               (Keyboard/isKeyDown Keyboard/KEY_W))
+        down (or (Keyboard/isKeyDown Keyboard/KEY_DOWN)
+                 (Keyboard/isKeyDown Keyboard/KEY_S))
+        left (or (Keyboard/isKeyDown Keyboard/KEY_LEFT)
+                 (Keyboard/isKeyDown Keyboard/KEY_A))
+        right (or (Keyboard/isKeyDown Keyboard/KEY_RIGHT)
+                  (Keyboard/isKeyDown Keyboard/KEY_D))
         dx (+ (if left -1 0.0) (if right 1 0.0))
         dy (+ (if up 1 0.0) (if down -1 0.0))
         tri-x (+ tri-x dx)
@@ -77,13 +81,11 @@
 
 (defn update
   []
-  (let [{:keys [width height angle last-time]} @globals
+  (let [{:keys [width height tri-x tri-y]} @globals
         cur-time (System/currentTimeMillis)
-        delta-time (- cur-time last-time)
-        next-angle (+ (* delta-time 0.05) angle)
-        next-angle (if (>= next-angle 360.0)
-                     (- next-angle 360.0)
-                     next-angle)]
+        dx (- (Mouse/getX) tri-x)
+        dy (- (Mouse/getY) tri-y)
+        next-angle (+ 90.0 (* (/ -180.0 Math/PI) (Math/atan2 dx dy)))]
     (dosync (ref-set globals
                      (assoc @globals
                        :angle next-angle
