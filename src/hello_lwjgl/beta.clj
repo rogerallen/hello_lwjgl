@@ -251,7 +251,6 @@
   []
   (init-window 800 600 "beta")
   (init-gl)
-  (Thread/sleep 2000)
   (while (not (Display/isCloseRequested))
     (update)
     (Display/update)
