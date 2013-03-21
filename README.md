@@ -4,31 +4,15 @@ Just a basic attempt to get LWJGL working with Leiningen & Clojure.
 
 ## Setup
 
-Here's what I did
+If you want to create something similar with Clojure & LWJGL, here's what I did
 
 ```bash
 > lein new app hello_lwjgl
 > cd hello_lwjgl
 ```
 
-See project.clj for my additions.  Note that fixing Leiningen is happening here:
-https://github.com/technomancy/leiningen/issues/898
-
-To link in natives, until Leiningen gets better...do this for your platform.
-
-### Mac 
-```bash
-> mkdir -p target/native/macosx/x86_64
-> cd target/native/macosx/x86_64
-> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar
-```
-
-### Linux
-```bash
-> mkdir -p target/native/linux/x86_64
-> cd target/native/linux/x86_64
-> jar xf ~/.m2/repository/org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-linux.jar
-```
+See project.clj for my additions.  Requires Leiningen 2.1.0 or later.
+See this issue for the background.  https://github.com/technomancy/leiningen/issues/898
 
 ## Usage
 
@@ -57,26 +41,6 @@ E.g. to run the 'alpha' test:
 
 * found this helpful example: https://github.com/honeytree/clojure-lwjgl
 * found this discussion: https://groups.google.com/forum/#!msg/leiningen/MAFbNqDYT78/Ub2scaa4RCoJ
-* Keeping this list around for future potential issues...
-
-```bash
-> lein deps
-Retrieving org/lwjgl/lwjgl/lwjgl/2.8.5/lwjgl-2.8.5.pom from central
-Retrieving org/lwjgl/lwjgl/parent/2.8.5/parent-2.8.5.pom from central
-Retrieving org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5.pom from central
-Retrieving net/java/jinput/jinput/2.0.5/jinput-2.0.5.pom from central
-Retrieving net/java/jutils/jutils/1.0.0/jutils-1.0.0.pom from central
-Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5.pom from central
-Retrieving org/lwjgl/lwjgl/lwjgl/2.8.5/lwjgl-2.8.5.jar from central
-Retrieving net/java/jinput/jinput/2.0.5/jinput-2.0.5.jar from central
-Retrieving org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-osx.jar from central
-Retrieving org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-windows.jar from central
-Retrieving org/lwjgl/lwjgl/lwjgl-platform/2.8.5/lwjgl-platform-2.8.5-natives-linux.jar from central
-Retrieving net/java/jutils/jutils/1.0.0/jutils-1.0.0.jar from central
-Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-linux.jar from central
-Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-windows.jar from central
-Retrieving net/java/jinput/jinput-platform/2.0.5/jinput-platform-2.0.5-natives-osx.jar from central
-```
 
 ## License
 
