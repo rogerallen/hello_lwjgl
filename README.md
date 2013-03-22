@@ -13,6 +13,7 @@ If you want to create something similar with Clojure & LWJGL, here's what I did
 
 See project.clj for my additions.  Requires Leiningen 2.1.0 or later.
 See this issue for the background.  https://github.com/technomancy/leiningen/issues/898
+I've verified this works for me on Mac, Linux and Windows.
 
 ## Usage
 
@@ -34,7 +35,6 @@ E.g. to run the 'alpha' test:
 
 ## To Do
 
-* Try out leiningen on windows to confirm it works.
 * Figure out `lein uberjar` and how to create a native mac/win/linux app.
 
 ## Notes
