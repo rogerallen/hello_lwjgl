@@ -2,6 +2,14 @@
 
 Just a basic attempt to get LWJGL working with Leiningen & Clojure.
 
+UPDATE: I have found that this project setup does not work well when you intend the project to be a library.  It forces the dependent project to add lwjgl dependencies in a similar manner.
+
+It also can have troubles on Linux 64-bit, forcing you to rename the 64-bit linux .so file.
+
+For my [shadertone](http://github.com/overtone/shadertone) project, I just finally created a clojars native library with the expected native directory hierarchy for my own purposes and that works fine and wasn't that much work.  I wish the lwjgl folks would just do this, too.
+
+All that said, this setup should work okay for getting your project to basically work.  Just know that, at some point, you may need to attend to some of these details.
+
 ## Setup
 
 If you want to create something similar with Clojure & LWJGL, here's what I did
