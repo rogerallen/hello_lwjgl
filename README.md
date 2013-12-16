@@ -160,9 +160,20 @@ E.g. to run the 'alpha' test:
 > lein run alpha
 ```
 
-## To Do
+### Running from the commandline
 
-* Figure out `lein uberjar` and how to create a native mac/win/linux app.
+First create the 'uberjar'
+
+```bash
+> lein uberjar
+...
+Created .../hello_lwjgl/target/hello_lwjgl-0.2.0-SNAPSHOT-standalone.jar
+
+Then you can run it with just a little extra help on the commandline.  Here are instructions for Mac.  Extrapolate for Windows/Linux.
+
+```bash
+> java -Djava.library.path=native/macosx/x86_64 -jar hello_lwjgl-0.2.0-SNAPSHOT-standalone.jar
+```
 
 ## Notes
 
@@ -175,6 +186,5 @@ E.g. to run the 'alpha' test:
 Copyright © 2013 Roger Allen.
 
 Distributed under the Eclipse Public License, the same as Clojure.
-
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rogerallen/hello_lwjgl/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
