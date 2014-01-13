@@ -73,33 +73,34 @@
         vertices-buffer (-> (BufferUtils/createFloatBuffer vertices-count)
                             (.put vertices)
                             (.flip))
-        colors (float-array
-                  [1.0  1.0  1.0
-                   1.0  1.0  0.0
-                   1.0  1.0  0.0
-
-                   1.0  1.0  1.0
-                   1.0  1.0  0.0
-                   1.0  1.0  0.0])
-        colors-count (count vertices) ;; better be the same as vertices-count
-        colors-buffer (-> (BufferUtils/createFloatBuffer colors-count)
-                            (.put colors)
-                            (.flip))
+        ;;colors (float-array
+        ;;          [1.0  1.0  1.0
+        ;;           1.0  1.0  0.0
+        ;;           1.0  1.0  0.0
+        ;;
+        ;;           1.0  1.0  1.0
+        ;;           1.0  1.0  0.0
+        ;;           1.0  1.0  0.0])
+        ;;colors-count (count vertices) ;; better be the same as vertices-count
+        ;;colors-buffer (-> (BufferUtils/createFloatBuffer colors-count)
+        ;;                    (.put colors)
+        ;;                    (.flip))
         ;; create & bind Vertex Buffer Object for vertices
         vbo-id (GL15/glGenBuffers)
         _ (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER vbo-id)
         _ (GL15/glBufferData GL15/GL_ARRAY_BUFFER vertices-buffer GL15/GL_STATIC_DRAW)
         _ (except-gl-errors "glBufferData 1")
-        cbo-id (GL15/glGenBuffers)
-        _ (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER cbo-id)
-        _ (GL15/glBufferData GL15/GL_ARRAY_BUFFER colors-buffer GL15/GL_STATIC_DRAW)
-        _ (except-gl-errors "glBufferData 2")
+        ;;cbo-id (GL15/glGenBuffers)
+        ;;_ (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER cbo-id)
+        ;;_ (GL15/glBufferData GL15/GL_ARRAY_BUFFER colors-buffer GL15/GL_STATIC_DRAW)
+        ;;_ (except-gl-errors "glBufferData 2")
         ]
     (dosync (ref-set globals
                      (assoc @globals
                        :vbo-id vbo-id
                        :vertices-count vertices-count
-                       :cbo-id cbo-id)))))
+                       ;;:cbo-id cbo-id
+                       )))))
 
 (def vs-shader
   (str "#version 120\n"
@@ -114,7 +115,7 @@
        "    mvp[2] = vec4(0.0, 0.0, 1.0, 0.0);\n"
        "    mvp[3] = vec4(0.0, 0.0, 0.0, 1.0);\n"
        "    gl_Position = mvp*gl_Vertex;\n"
-       "    gl_FrontColor = gl_Color;\n"
+       ;;"    gl_FrontColor = gl_Color;\n"
        "}\n"
        ))
 
@@ -122,8 +123,8 @@
   (str "#version 120\n"
        "\n"
        "void main(void) {\n"
-       ;;"    gl_FragColor = vec4(1.0, 1.0, 0.5, 1.0);\n"
-       "    gl_FragColor = gl_Color;\n"
+       "    gl_FragColor = vec4(1.0, 1.0, 0.5, 1.0);\n"
+       ;;"    gl_FragColor = gl_Color;\n"
        "}\n"
        ))
 
@@ -201,15 +202,15 @@
     (GL11/glVertexPointer 3 GL11/GL_FLOAT 0 0)
     (except-gl-errors "glVertexPointer")
 
-    (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER cbo-id)
-    (except-gl-errors "glBindBuffer c")
-    (GL11/glColorPointer 3 GL11/GL_FLOAT 0 0)
-    (except-gl-errors "glColorPointer")
+    ;;(GL15/glBindBuffer GL15/GL_ARRAY_BUFFER cbo-id)
+    ;;(except-gl-errors "glBindBuffer c")
+    ;;(GL11/glColorPointer 3 GL11/GL_FLOAT 0 0)
+    ;;(except-gl-errors "glColorPointer")
 
     (GL11/glEnableClientState GL11/GL_VERTEX_ARRAY)
     (except-gl-errors "glEnableClientState v")
-    (GL11/glEnableClientState GL11/GL_COLOR_ARRAY)
-    (except-gl-errors "glEnableClientState c")
+    ;;(GL11/glEnableClientState GL11/GL_COLOR_ARRAY)
+    ;;(except-gl-errors "glEnableClientState c")
 
     (GL11/glDrawArrays GL11/GL_TRIANGLES 0 vertices-count)
     (except-gl-errors "glDrawArrays")
@@ -219,8 +220,8 @@
     (except-gl-errors "glBindBuffer 0")
     (GL11/glDisableClientState GL11/GL_VERTEX_ARRAY)
     (except-gl-errors "glDisableClientState v")
-    (GL11/glDisableClientState GL11/GL_COLOR_ARRAY)
-    (except-gl-errors "glDisableClientState c")
+    ;;(GL11/glDisableClientState GL11/GL_COLOR_ARRAY)
+    ;;(except-gl-errors "glDisableClientState c")
     (GL20/glUseProgram 0)
     (except-gl-errors "glUseProgram 0")
     ))
