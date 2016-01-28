@@ -2,15 +2,18 @@
 
 How to get LWJGL working with Leiningen & Clojure.
 
-I've noticed (via the Bitdeli badge below) that I get several hits per
-week on this project.  Since 2.9.1 was recently released (December 2,
-2013), I've decided to update this and write a "How To" for you to
-create your own LWJGL clojar natives release.
+I've noticed that I get several hits per week on this project.  So,
+I've decided to update this and write a "How To" for you to create
+your own LWJGL clojar natives release.
 
-The following setup echoes how I made the library work for my [shadertone](http://github.com/overtone/shadertone) project.
+*Now with LWJGL3 goodness!*
 
-I have verified this works for 2.9.0 on Mac/Win/Linux.  I'll update
-when I test 2.9.1 on Win/Linux, soon.
+The following setup echoes how I made the library work for my
+[shadertone](http://github.com/overtone/shadertone) project.  I
+haven't updated that to LWJGL3, yet, though.
+
+I have verified this works for LWJGL 3.0.0b1 build 64 on Mac.  I'll
+update when I test on Win/Linux, soon.
 
 ## Your Own LWJGL Lib Setup
 
@@ -26,15 +29,13 @@ translate this for Windows yourself.
 
 ### download official jar file
 
-goto
-http://sourceforge.net/projects/java-game-lib/files/Official%20Releases/
-and get the lwjgl-#.#.#.zip file you want.  Instructions below assume
-2.9.1.
+goto https://www.lwjgl.org/download
+and get the lwjgl.zip file you want.  Instructions below assume
+LWJGL 3.0.0b1 build 64 (see build.txt file).
 
-### check md5 & unzip the release zip file
+### unzip the release zip file
 
-    md5 lwjgl-2.9.1.zip
-    unzip lwjgl-2.9.1.zip
+    unzip lwjgl.zip
 
 ### make sandbox to use for packing up the new jar you will create
 
@@ -43,7 +44,6 @@ and get the lwjgl-#.#.#.zip file you want.  Instructions below assume
 
 ### make native dirs as clojure expects
 
-    mkdir -p native/macosx/x86
     mkdir -p native/macosx/x86_64
     mkdir -p native/linux/x86
     mkdir -p native/linux/x86_64
@@ -52,39 +52,40 @@ and get the lwjgl-#.#.#.zip file you want.  Instructions below assume
 
 ### copy natives from official spots to the right spots for clojure
 
-    cp ../lwjgl-2.9.1/native/linux/libjinput-linux.so     native/linux/x86
-    cp ../lwjgl-2.9.1/native/linux/libjinput-linux64.so   native/linux/x86_64
-    cp ../lwjgl-2.9.1/native/linux/liblwjgl.so            native/linux/x86
-    cp ../lwjgl-2.9.1/native/linux/liblwjgl64.so          native/linux/x86_64
-    cp ../lwjgl-2.9.1/native/linux/libopenal.so           native/linux/x86
-    cp ../lwjgl-2.9.1/native/linux/libopenal64.so         native/linux/x86_64
-    cp ../lwjgl-2.9.1/native/macosx/libjinput-osx.jnilib  native/macosx/x86_64
-    cp ../lwjgl-2.9.1/native/macosx/liblwjgl.jnilib       native/macosx/x86_64
-    cp ../lwjgl-2.9.1/native/macosx/openal.dylib          native/macosx/x86_64
-    cp ../lwjgl-2.9.1/native/windows/OpenAL32.dll         native/windows/x86
-    cp ../lwjgl-2.9.1/native/windows/OpenAL64.dll         native/windows/x86_64
-    cp ../lwjgl-2.9.1/native/windows/jinput-dx8.dll       native/windows/x86
-    cp ../lwjgl-2.9.1/native/windows/jinput-dx8_64.dll    native/windows/x86_64
-    cp ../lwjgl-2.9.1/native/windows/jinput-raw.dll       native/windows/x86
-    cp ../lwjgl-2.9.1/native/windows/jinput-raw_64.dll    native/windows/x86_64
-    cp ../lwjgl-2.9.1/native/windows/lwjgl.dll            native/windows/x86
-    cp ../lwjgl-2.9.1/native/windows/lwjgl64.dll          native/windows/x86_64
+    cp ../native/glfw.dll             native/windows/x86_64
+    cp ../native/glfw32.dll           native/windows/x86
+    cp ../native/jemalloc.dll         native/windows/x86_64
+    cp ../native/jemalloc32.dll       native/windows/x86
+    cp ../native/libglfw.dylib        native/macosx/x86_64
+    cp ../native/libglfw.so           native/linux/x86_64
+    cp ../native/libglfw32.so         native/linux/x86
+    cp ../native/libjemalloc.dylib    native/macosx/x86_64
+    cp ../native/libjemalloc.so       native/linux/x86_64
+    cp ../native/libjemalloc32.so     native/linux/x86
+    cp ../native/liblwjgl.dylib       native/macosx/x86_64
+    cp ../native/liblwjgl.so          native/linux/x86_64
+    cp ../native/liblwjgl32.so        native/linux/x86
+    cp ../native/libopenal.dylib      native/macosx/x86_64
+    cp ../native/libopenal.so         native/linux/x86_64
+    cp ../native/libopenal32.so       native/linux/x86
+    cp ../native/lwjgl.dll            native/windows/x86_64
+    cp ../native/lwjgl32.dll          native/windows/x86
+    cp ../native/OpenAL.dll           native/windows/x86_64
+    cp ../native/OpenAL32.dll         native/windows/x86
 
-### grab the rest of the jars
+### copy licenses
 
-See http://www.lwjgl.org/wiki/index.php?title=General_FAQ#What_are_all_the_Jars_include_in_the_LWJGL_download_bundle.3F
+    cp -r ../doc .
 
-After reading this, I decided to only include lwjgl and lwjgl_util in this
-bundle.  Your needs may be different.
+### extract the jar file
 
-    cp ../lwjgl-2.9.1/jar/lwjgl.jar .
-    cp ../lwjgl-2.9.1/jar/lwjgl_util.jar .
-    jar xvf lwjgl.jar
-    jar xvf lwjgl_util.jar
+    jar xvf ../jar/lwjgl.jar
 
-### make jar
+### make your jar for clojure's use
 
-    jar -cMf lwjgl-2.9.1.jar org native
+    jar -cMf lwjgl-3.0.0b1.jar doc org native
+
+    Note, I've skipped including the src.
 
 ### edit pom.xml
 
@@ -95,7 +96,7 @@ Change this as-needed for your own purposes.
       <modelVersion>4.0.0</modelVersion>
       <groupId>hello_lwjgl</groupId>
       <artifactId>lwjgl</artifactId>
-      <version>2.9.1</version>
+      <version>3.0.0b1</version>
       <name>lwjgl</name>
       <description>packaging of LWJGL for Clojure</description>
       <url>http://github.com/roger_allen/hello_lwjgl</url>
@@ -103,11 +104,11 @@ Change this as-needed for your own purposes.
 
 ### local test install
 
-    mvn install:install-file -Dfile=lwjgl-2.9.1.jar -DpomFile=pom.xml
+    mvn install:install-file -Dfile=lwjgl-3.0.0b1.jar -DpomFile=pom.xml
 
 ### try this out in hello_lwjgl
 
-edit project.clj to use `[hello_lwjgl/lwjgl "2.9.1"]`
+edit project.clj to use `[hello_lwjgl/lwjgl "3.0.0b1"]`
 
     lein clean
     lein -o deps
@@ -115,14 +116,29 @@ edit project.clj to use `[hello_lwjgl/lwjgl "2.9.1"]`
 
 ### upload this new lwjgl library to clojars for use by others
 
-    scp lwjgl-2.9.1.jar pom.xml clojars@clojars.org:
+Add authentication info to settings.xml (typically in your ~/.m2 directory):
+
+  <settings>
+   <servers>
+    <server>
+     <id>clojars</id>
+     <username>username</username>
+     <password>password</password>
+    </server>
+   </servers>
+  </settings>
+
+Then you can deploy with
+
+  mvn deploy:deploy-file -Dfile=lwjgl-3.0.0b1.jar -DpomFile=pom.xml -DrepositoryId=clojars -Durl=https://clojars.org/repo
+
 
 ### check to make sure it all works from clojars
 
     > rm -rf ~/.m2/repository/hello_lwjgl/lwjgl
     > lein deps
-    Retrieving hello_lwjgl/lwjgl/2.9.1/lwjgl-2.9.1.pom from clojars
-    Retrieving hello_lwjgl/lwjgl/2.9.1/lwjgl-2.9.1.jar from clojars
+    Retrieving hello_lwjgl/lwjgl/3.0.0b1/lwjgl-3.0.0b1.pom from clojars
+    Retrieving hello_lwjgl/lwjgl/3.0.0b1/lwjgl-3.0.0b1.jar from clojars
     > lein run alpha
 
 That should do it.  Now you have LWJGL from Clojure.  Enjoy!  If you
@@ -183,8 +199,6 @@ Then you can run it with just a little extra help on the commandline.  Here are 
 
 ## License
 
-Copyright © 2013 Roger Allen.
+Copyright © 2013-2016 Roger Allen.
 
 Distributed under the Eclipse Public License, the same as Clojure.
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/rogerallen/hello_lwjgl/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

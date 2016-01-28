@@ -14,11 +14,12 @@
   (let [os (leiningen.core.eval/get-os)]
     (get LWJGL-CLASSIFIER os)))
 
-(defproject hello_lwjgl "0.2.0-SNAPSHOT"
+(defproject hello_lwjgl "0.3.0"
   :description "Simple LWJGL clojure test."
   :url "https://github.com/rogerallen/hello_lwjgl"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.4.0"]
-                 [hello_lwjgl/lwjgl "2.9.1"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [hello_lwjgl/lwjgl "3.0.0b1"]]
+  :jvm-opts ["-XstartOnFirstThread"]
   :main hello-lwjgl.core)
