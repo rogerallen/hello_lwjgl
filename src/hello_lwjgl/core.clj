@@ -1,6 +1,6 @@
 (ns hello-lwjgl.core
   (:require [hello-lwjgl.alpha :as alpha]
-            ;;[hello-lwjgl.beta  :as beta]
+            [hello-lwjgl.beta  :as beta]
             ;;[hello-lwjgl.gamma :as gamma]
             ;;[hello-lwjgl.delta :as delta]
             )
@@ -13,7 +13,7 @@
   (println "Hello, Lightweight Java Game Library! V" (Version/getVersion))
   (cond
    (= "alpha" (first args)) (alpha/main)
-   ;;(= "beta"  (first args)) (beta/main)
+   (= "beta"  (first args)) (beta/main)
    ;;(= "gamma" (first args)) (gamma/main)
    ;;(= "delta" (first args)) (delta/main)
    :else (alpha/main)))

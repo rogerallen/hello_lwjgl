@@ -2,13 +2,77 @@
   (:require [clojure.pprint :as pprint])
   (:import (java.nio ByteBuffer FloatBuffer)
            (org.lwjgl BufferUtils)
-           (org.lwjgl.opengl ContextAttribs Display DisplayMode GL11 GL15 GL20 GL30 PixelFormat)
-           (org.lwjgl.util.glu GLU)))
+           (org.lwjgl.opengl GL GL11 GL15 GL20 GL30)
+           (org.lwjgl.glfw GLFW GLFWErrorCallback GLFWKeyCallback)))
 
 ;; ======================================================================
 ;; spinning triangle in OpenGL 3.2
-;; >250 lines vs. <100 lines...progress?
+(defonce globals (atom {:errorCallback nil
+                        :keyCallback   nil
+                        :window        nil
+                        :width         0
+                        :height        0
+                        :title         "none"
+                        :angle         0.0
+                        :last-time     0
+                        ;; geom ids
+                        :vao-id        0
+                        :vbo-id        0
+                        :vboc-id       0
+                        :vboi-id       0
+                        :indices-count 0
+                        ;; shader program ids
+                        :vs-id         0
+                        :fs-id         0
+                        :p-id          0
+                        :angle-loc     0}))
+
 (defn init-window
+  [width height title]
+
+  (swap! globals assoc
+         :width     width
+         :height    height
+         :title     title
+         :last-time (System/currentTimeMillis))
+
+  (swap! globals assoc
+         :errorCallback (GLFWErrorCallback/createPrint System/err))
+  (GLFW/glfwSetErrorCallback (:errorCallback @globals))
+  (when-not (= (GLFW/glfwInit) GLFW/GLFW_TRUE)
+    (throw (IllegalStateException. "Unable to initialize GLFW")))
+
+  (GLFW/glfwDefaultWindowHints)
+  (GLFW/glfwWindowHint GLFW/GLFW_VISIBLE               GLFW/GLFW_FALSE)
+  (GLFW/glfwWindowHint GLFW/GLFW_RESIZABLE             GLFW/GLFW_TRUE)
+  (GLFW/glfwWindowHint GLFW/GLFW_OPENGL_PROFILE        GLFW/GLFW_OPENGL_CORE_PROFILE)
+  (GLFW/glfwWindowHint GLFW/GLFW_OPENGL_FORWARD_COMPAT GL11/GL_TRUE)
+  (GLFW/glfwWindowHint GLFW/GLFW_CONTEXT_VERSION_MAJOR 3)
+  (GLFW/glfwWindowHint GLFW/GLFW_CONTEXT_VERSION_MINOR 2)
+  (swap! globals assoc
+         :window (GLFW/glfwCreateWindow width height title 0 0))
+  (when (= (:window @globals) nil)
+    (throw (RuntimeException. "Failed to create the GLFW window")))
+
+  (swap! globals assoc
+         :keyCallback
+         (proxy [GLFWKeyCallback] []
+           (invoke [window key scancode action mods]
+             (when (and (= key GLFW/GLFW_KEY_ESCAPE)
+                        (= action GLFW/GLFW_RELEASE))
+               (GLFW/glfwSetWindowShouldClose (:window @globals) GLFW/GLFW_TRUE)))))
+  (GLFW/glfwSetKeyCallback (:window @globals) (:keyCallback @globals))
+
+  (let [vidmode (GLFW/glfwGetVideoMode (GLFW/glfwGetPrimaryMonitor))]
+    (GLFW/glfwSetWindowPos
+     (:window @globals)
+     (/ (- (.width vidmode) width) 2)
+     (/ (- (.height vidmode) height) 2))
+    (GLFW/glfwMakeContextCurrent (:window @globals))
+    (GLFW/glfwSwapInterval 1)
+    (GLFW/glfwShowWindow (:window @globals))))
+
+#_(defn init-window
   [width height title]
   (let [pixel-format (PixelFormat.)
         context-attributes (-> (ContextAttribs. 3 2)
@@ -83,13 +147,12 @@
         _ (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER 0)
         ;;_ (println "init-buffers errors?" (GL11/glGetError))
         ]
-    (dosync (ref-set globals
-                     (assoc @globals
-                       :vao-id vao-id
-                       :vbo-id vbo-id
-                       :vboc-id vboc-id
-                       :vboi-id vboi-id
-                       :indices-count indices-count)))))
+    (swap! globals assoc
+           :vao-id vao-id
+           :vbo-id vbo-id
+           :vboc-id vboc-id
+           :vboi-id vboi-id
+           :indices-count indices-count)))
 
 (def vs-shader
   (str "#version 150 core\n"
@@ -123,7 +186,7 @@
        "    out_Color = pass_Color;\n"
        "}\n"
        ))
-                     
+
 (defn load-shader
   [shader-str shader-type]
   (let [shader-id (GL20/glCreateShader shader-type)
@@ -145,16 +208,16 @@
         angle-loc (GL20/glGetUniformLocation p-id "in_Angle")
         ;;_ (println "init-shaders errors?" (GL11/glGetError))
         ]
-    (dosync (ref-set globals
-                     (assoc @globals
-                       :vs-id vs-id
-                       :fs-id fs-id
-                       :p-id p-id
-                       :angle-loc angle-loc)))))
+    (swap! globals assoc
+           :vs-id vs-id
+           :fs-id fs-id
+           :p-id p-id
+           :angle-loc angle-loc)))
 
 (defn init-gl
   []
   (let [{:keys [width height]} @globals]
+    (GL/createCapabilities)
     (println "OpenGL version:" (GL11/glGetString GL11/GL_VERSION))
     (GL11/glClearColor 0.0 0.0 0.0 0.0)
     (GL11/glViewport 0 0 width height)
@@ -196,7 +259,7 @@
     ;;(println "draw errors?" (GL11/glGetError))
     ))
 
-(defn update
+(defn update-globals
   []
   (let [{:keys [width height angle last-time]} @globals
         cur-time (System/currentTimeMillis)
@@ -205,10 +268,9 @@
         next-angle (if (>= next-angle 360.0)
                      (- next-angle 360.0)
                      next-angle)]
-    (dosync (ref-set globals
-                     (assoc @globals
-                       :angle next-angle
-                       :last-time cur-time)))
+    (swap! globals assoc
+           :angle next-angle
+           :last-time cur-time)
     (draw)))
 
 (defn destroy-gl
@@ -218,46 +280,53 @@
     (GL20/glUseProgram 0)
     (GL20/glDetachShader p-id vs-id)
     (GL20/glDetachShader p-id fs-id)
- 
+
     (GL20/glDeleteShader vs-id)
     (GL20/glDeleteShader fs-id)
     (GL20/glDeleteProgram p-id)
- 
+
     ;; Select the VAO
     (GL30/glBindVertexArray vao-id)
- 
+
     ;; Disable the VBO index from the VAO attributes list
     (GL20/glDisableVertexAttribArray 0)
     (GL20/glDisableVertexAttribArray 1)
- 
+
     ;; Delete the vertex VBO
     (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER 0)
     (GL15/glDeleteBuffers vbo-id)
- 
+
     ;; Delete the color VBO
     (GL15/glBindBuffer GL15/GL_ARRAY_BUFFER 0)
     (GL15/glDeleteBuffers vboc-id)
- 
+
     ;; Delete the index VBO
     (GL15/glBindBuffer GL15/GL_ELEMENT_ARRAY_BUFFER 0)
     (GL15/glDeleteBuffers vboi-id)
- 
+
     ;; Delete the VAO
     (GL30/glBindVertexArray 0)
     (GL30/glDeleteVertexArrays vao-id)
     ))
 
-(defn run
+(defn main-loop
   []
-  (init-window 800 600 "beta")
-  (init-gl)
-  (while (not (Display/isCloseRequested))
-    (update)
-    (Display/update)
-    (Display/sync 60))
-  (destroy-gl)
-  (Display/destroy))
+  (while (= (GLFW/glfwWindowShouldClose (:window @globals)) GLFW/GLFW_FALSE)
+    (update-globals)
+    (draw)
+    (GLFW/glfwSwapBuffers (:window @globals))
+    (GLFW/glfwPollEvents)))
 
-(defn main []
+(defn main
+  []
   (println "Run example Beta")
-  (.start (Thread. run)))
+  (try
+    (init-window 800 600 "beta")
+    (init-gl)
+    (main-loop)
+    (destroy-gl)
+    (GLFW/glfwDestroyWindow (:window @globals))
+    (.release (:keyCallback @globals))
+    (finally
+      (GLFW/glfwTerminate)
+      (.release (:errorCallback @globals)))))
