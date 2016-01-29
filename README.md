@@ -118,19 +118,19 @@ edit project.clj to use `[hello_lwjgl/lwjgl "3.0.0b1"]`
 
 Add authentication info to settings.xml (typically in your ~/.m2 directory):
 
-  <settings>
-   <servers>
-    <server>
-     <id>clojars</id>
-     <username>username</username>
-     <password>password</password>
-    </server>
-   </servers>
-  </settings>
+    <settings>
+     <servers>
+      <server>
+       <id>clojars</id>
+       <username>username</username>
+       <password>password</password>
+      </server>
+     </servers>
+    </settings>
 
 Then you can deploy with
 
-  mvn deploy:deploy-file -Dfile=lwjgl-3.0.0b1.jar -DpomFile=pom.xml -DrepositoryId=clojars -Durl=https://clojars.org/repo
+    mvn deploy:deploy-file -Dfile=lwjgl-3.0.0b1.jar -DpomFile=pom.xml -DrepositoryId=clojars -Durl=https://clojars.org/repo
 
 
 ### check to make sure it all works from clojars
