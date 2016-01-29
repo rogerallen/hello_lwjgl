@@ -167,7 +167,8 @@ A spinning triangle that uses OpenGL 1.1
 ### beta
 A spinning triangle that uses OpenGL 3.2
 ### gamma
-A fullscreen spinning triangle that you can move with a keyboard
+A fullscreen spinning triangle that uses OpenGL 1.1 and you can move
+with a keyboard.  The triangle also rotates to follow the mouse.
 
 To run these examples, just add the name to the lein run commandline.
 E.g. to run the 'alpha' test:
