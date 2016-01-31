@@ -185,6 +185,7 @@ First create the 'uberjar'
 > lein uberjar
 ...
 Created .../hello_lwjgl/target/hello_lwjgl-0.2.0-SNAPSHOT-standalone.jar
+```
 
 Then you can run it with just a little extra help on the commandline.  Here are instructions for Mac.  Extrapolate for Windows/Linux.
 
