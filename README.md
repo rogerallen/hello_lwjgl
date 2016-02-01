@@ -12,8 +12,7 @@ The following setup echoes how I made the library work for my
 [shadertone](http://github.com/overtone/shadertone) project.  I
 haven't updated that to LWJGL3, yet, though.
 
-I have verified this works for LWJGL 3.0.0b1 build 64 on Mac.  I'll
-update when I test on Win/Linux, soon.
+I have verified this works for LWJGL 3.0.0b build 64 on Mac/Windows/Linux.
 
 ## Your Own LWJGL Lib Setup
 
@@ -24,14 +23,18 @@ your own clojars package of LWJGL.  IMO, it is easier to make your own
 package than to work around the issues that the official package
 presents.
 
-I did this on a Mac.  Linux will be similar.  You'll have to
-translate this for Windows yourself.
+You don't have to create your own LWJGL library.  You can just use
+mine if you'd like.  But, this is how I created it for myself.  I did
+this on a Mac.  Linux will be similar.  You'll have to translate this
+for Windows yourself.
 
 ### download official jar file
 
-goto https://www.lwjgl.org/download
-and get the lwjgl.zip file you want.  Instructions below assume
-LWJGL 3.0.0b1 build 64 (see build.txt file).
+Goto https://www.lwjgl.org/download and get the lwjgl.zip file you
+want.  Instructions below assume LWJGL 3.0.0b build 64 (see build.txt
+file) which is the file that was downloaded via the "Release" button
+in January, 2016.  I added a "1" suffix to the end because my first
+clojars upload had a mistake.
 
 ### unzip the release zip file
 
