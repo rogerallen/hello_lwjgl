@@ -321,7 +321,7 @@
   []
   (println "Run example Beta")
   (try
-    (init-window 800 600 "beta")
+    (init-window 800 800 "beta")
     (init-gl)
     (main-loop)
     (destroy-gl)
