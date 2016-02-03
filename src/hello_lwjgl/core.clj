@@ -1,7 +1,9 @@
 (ns hello-lwjgl.core
   (:require [hello-lwjgl.alpha :as alpha]
             [hello-lwjgl.beta  :as beta]
-            [hello-lwjgl.gamma :as gamma])
+            [hello-lwjgl.gamma :as gamma]
+            ;;[hello-lwjgl.omega :as omega]
+            )
   (:import (org.lwjgl Version))
   (:gen-class))
 
@@ -13,4 +15,5 @@
    (= "alpha" (first args)) (alpha/main)
    (= "beta"  (first args)) (beta/main)
    (= "gamma" (first args)) (gamma/main)
+   ;;(= "omega" (first args)) (omega/main)
    :else (alpha/main)))
