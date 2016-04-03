@@ -3,7 +3,7 @@
 ;; per-os jvm-opts code cribbed from Overtone
 (def JVM-OPTS
   {:common   []
-   :macosx   ["-XstartOnFirstThread"]
+   :macosx   ["-XstartOnFirstThread" "-Djava.awt.headless=true"]
    :linux    []
    :windows  []})
 
@@ -19,7 +19,8 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [hello_lwjgl/lwjgl   "3.0.0b1"]]
+                 [hello_lwjgl/lwjgl   "3.0.0b1"]
+                 [cider/cider-nrepl "0.11.0"]]
   :min-lein-version "2.1.0"
   :jvm-opts ^:replace ~(jvm-opts)
   :main hello-lwjgl.core)
