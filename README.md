@@ -180,6 +180,25 @@ E.g. to run the 'alpha' test:
 > lein run alpha
 ```
 
+### REPL Usage
+
+Because of interations between the GLFW and AWT window system and Mac OS X, using the REPL on Mac OS X is a bit different than on PC/Linux.  On PC/Linux, I think you can just use `lein repl` as you would normally.  But, on Mac, we need to start the nREPL server ourselves in a separate thread.  See Issue #6 for details and thanks to @antoinevg for his efforts in figuring this out.
+
+For Mac OS X, we have added the Emacs cider-nrepl package in order to get a REPL working.  I'm not sure about other external tools, so for now cider-nrepl is the way to get a REPL on the Mac.  To start this, add `cider` after the name of the example.  E.g. `lein alpha cider` will create a cider-nrepl server and report this on startup.  Something like this:
+
+```
+> lein run alpha cider
+Hello, Lightweight Java Game Library! V 3.0.0b SNAPSHOT
+Run example Alpha
+Starting Cider Nrepl Server Port 7888
+OpenGL version: 2.1 NVIDIA-10.4.2 310.41.35f01
+```
+
+In emacs, use `M-x cider-connect` and use port 7888 to connect.  A repl pane shoudl open up.
+
+Please note that you may need to adjust the cider-nrepl package version to match your local install.  It changes often.
+
+
 ### Running from the commandline
 
 First create the 'uberjar'
