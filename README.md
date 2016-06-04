@@ -12,8 +12,8 @@ The following setup echoes how I made the library work for my
 [shadertone](http://github.com/overtone/shadertone) project.  I
 haven't updated that to LWJGL3, yet, though.
 
-I have verified this works for LWJGL 3.0.0 build 90 on Mac.
-[will test on Windows/Linux soon, but should work]
+I have verified this works for LWJGL 3.0.0 build 90 on Mac/Linux.
+[will test on Windows soon, but should work]
 
 ## Your Own LWJGL Lib Setup
 
@@ -221,6 +221,8 @@ Then you can run it with just a little extra help on the commandline.  Here are 
 * found this helpful example: https://github.com/honeytree/clojure-lwjgl
 * found this discussion: https://groups.google.com/forum/#!msg/leiningen/MAFbNqDYT78/Ub2scaa4RCoJ
 * See this issue for some background. https://github.com/technomancy/leiningen/issues/898
+* If you get an error similar to this, update to Java 8: java.lang.UnsupportedClassVersionError: org/lwjgl/opengl/GL : Unsupported major.minor version 52.0
+
 
 ## License
 
