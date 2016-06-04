@@ -13,13 +13,13 @@
        (vec (set (concat (get JVM-OPTS :common)
                          (get JVM-OPTS os))))))
 
-(defproject hello_lwjgl "0.3.0"
+(defproject hello_lwjgl "0.3.1"
   :description "Simple LWJGL3 clojure test."
   :url "https://github.com/rogerallen/hello_lwjgl"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [hello_lwjgl/lwjgl   "3.0.0b1"]
+                 [hello_lwjgl/lwjgl   "3.0.0"]
                  [cider/cider-nrepl "0.11.0"]]
   :min-lein-version "2.1.0"
   :jvm-opts ^:replace ~(jvm-opts)

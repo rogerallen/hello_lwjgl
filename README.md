@@ -12,7 +12,8 @@ The following setup echoes how I made the library work for my
 [shadertone](http://github.com/overtone/shadertone) project.  I
 haven't updated that to LWJGL3, yet, though.
 
-I have verified this works for LWJGL 3.0.0b build 64 on Mac/Windows/Linux.
+I have verified this works for LWJGL 3.0.0 build 90 on Mac.
+[will test on Windows/Linux soon, but should work]
 
 ## Your Own LWJGL Lib Setup
 
@@ -31,10 +32,9 @@ for Windows yourself.
 ### download official jar file
 
 Goto https://www.lwjgl.org/download and get the lwjgl.zip file you
-want.  Instructions below assume LWJGL 3.0.0b build 64 (see build.txt
+want.  Instructions below assume LWJGL 3.0.0 build 90 (see build.txt
 file) which is the file that was downloaded via the "Release" button
-in January, 2016.  I added a "1" suffix to the end because my first
-clojars upload had a mistake.
+in June, 2016.
 
 ### unzip the release zip file
 
@@ -47,34 +47,31 @@ clojars upload had a mistake.
 
 ### make native dirs as clojure expects
 
+(As of 3.0.0 there are no longer 32-bit binaries provided for linux.)
+
     mkdir -p native/macosx/x86_64
-    mkdir -p native/linux/x86
     mkdir -p native/linux/x86_64
     mkdir -p native/windows/x86
     mkdir -p native/windows/x86_64
 
 ### copy natives from official spots to the right spots for clojure
 
+    cp ../native/OpenAL.dll           native/windows/x86_64
+    cp ../native/OpenAL32.dll         native/windows/x86
     cp ../native/glfw.dll             native/windows/x86_64
     cp ../native/glfw32.dll           native/windows/x86
     cp ../native/jemalloc.dll         native/windows/x86_64
     cp ../native/jemalloc32.dll       native/windows/x86
     cp ../native/libglfw.dylib        native/macosx/x86_64
     cp ../native/libglfw.so           native/linux/x86_64
-    cp ../native/libglfw32.so         native/linux/x86
     cp ../native/libjemalloc.dylib    native/macosx/x86_64
     cp ../native/libjemalloc.so       native/linux/x86_64
-    cp ../native/libjemalloc32.so     native/linux/x86
     cp ../native/liblwjgl.dylib       native/macosx/x86_64
     cp ../native/liblwjgl.so          native/linux/x86_64
-    cp ../native/liblwjgl32.so        native/linux/x86
     cp ../native/libopenal.dylib      native/macosx/x86_64
     cp ../native/libopenal.so         native/linux/x86_64
-    cp ../native/libopenal32.so       native/linux/x86
     cp ../native/lwjgl.dll            native/windows/x86_64
     cp ../native/lwjgl32.dll          native/windows/x86
-    cp ../native/OpenAL.dll           native/windows/x86_64
-    cp ../native/OpenAL32.dll         native/windows/x86
 
 ### copy licenses
 
@@ -86,7 +83,7 @@ clojars upload had a mistake.
 
 ### make your jar for clojure's use
 
-    jar -cMf lwjgl-3.0.0b1.jar doc org native
+    jar -cMf lwjgl-3.0.0.jar META-INF doc org native
 
     Note, I've skipped including the src.
 
@@ -99,19 +96,19 @@ Change this as-needed for your own purposes.
       <modelVersion>4.0.0</modelVersion>
       <groupId>hello_lwjgl</groupId>
       <artifactId>lwjgl</artifactId>
-      <version>3.0.0b1</version>
+      <version>3.0.0</version>
       <name>lwjgl</name>
-      <description>packaging of LWJGL for Clojure</description>
+      <description>Packaging of LWJGL3 for Clojure</description>
       <url>http://github.com/roger_allen/hello_lwjgl</url>
     </project>
 
 ### local test install
 
-    mvn install:install-file -Dfile=lwjgl-3.0.0b1.jar -DpomFile=pom.xml
+    mvn install:install-file -Dfile=lwjgl-3.0.0.jar -DpomFile=pom.xml
 
 ### try this out in hello_lwjgl
 
-edit project.clj to use `[hello_lwjgl/lwjgl "3.0.0b1"]`
+edit project.clj to use `[hello_lwjgl/lwjgl "3.0.0"]`
 
     lein clean
     lein -o deps
@@ -131,17 +128,16 @@ Add authentication info to settings.xml (typically in your ~/.m2 directory):
      </servers>
     </settings>
 
-Then you can deploy with
+Then you can deploy (from the sandbox dir) with
 
-    mvn deploy:deploy-file -Dfile=lwjgl-3.0.0b1.jar -DpomFile=pom.xml -DrepositoryId=clojars -Durl=https://clojars.org/repo
+    mvn deploy:deploy-file -Dfile=lwjgl-3.0.0.jar -DpomFile=pom.xml -DrepositoryId=clojars -Durl=https://clojars.org/repo
 
-
-### check to make sure it all works from clojars
+### check to make sure it all works from clojars (in the hello_lwjgl dir)
 
     > rm -rf ~/.m2/repository/hello_lwjgl/lwjgl
     > lein deps
-    Retrieving hello_lwjgl/lwjgl/3.0.0b1/lwjgl-3.0.0b1.pom from clojars
-    Retrieving hello_lwjgl/lwjgl/3.0.0b1/lwjgl-3.0.0b1.jar from clojars
+    Retrieving hello_lwjgl/lwjgl/3.0.0/lwjgl-3.0.0.pom from clojars
+    Retrieving hello_lwjgl/lwjgl/3.0.0/lwjgl-3.0.0.jar from clojars
     > lein run alpha
 
 That should do it.  Now you have LWJGL from Clojure.  Enjoy!  If you
@@ -194,10 +190,15 @@ Starting Cider Nrepl Server Port 7888
 OpenGL version: 2.1 NVIDIA-10.4.2 310.41.35f01
 ```
 
-In emacs, use `M-x cider-connect` and use port 7888 to connect.  A repl pane shoudl open up.
+In emacs, use `M-x cider-connect` and use port 7888 to connect.  A repl pane shoudl open up.  Now, you can adjust the code live, for example, adjust the angle of the triangle.
+
+```
+user> (in-ns 'hello-lwjgl.alpha)
+#namespace[hello-lwjgl.alpha]
+hello-lwjgl.alpha> (swap! globals assoc :angle 0.0)
+```
 
 Please note that you may need to adjust the cider-nrepl package version to match your local install.  It changes often.
-
 
 ### Running from the commandline
 

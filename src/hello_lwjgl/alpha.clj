@@ -25,7 +25,7 @@
   (swap! globals assoc
          :errorCallback (GLFWErrorCallback/createPrint System/err))
   (GLFW/glfwSetErrorCallback (:errorCallback @globals))
-  (when-not (= (GLFW/glfwInit) GLFW/GLFW_TRUE)
+  (when-not (GLFW/glfwInit)
     (throw (IllegalStateException. "Unable to initialize GLFW")))
 
   (GLFW/glfwDefaultWindowHints)
@@ -42,7 +42,7 @@
            (invoke [window key scancode action mods]
              (when (and (= key GLFW/GLFW_KEY_ESCAPE)
                         (= action GLFW/GLFW_RELEASE))
-               (GLFW/glfwSetWindowShouldClose (:window @globals) GLFW/GLFW_TRUE)))))
+               (GLFW/glfwSetWindowShouldClose (:window @globals) true)))))
   (GLFW/glfwSetKeyCallback (:window @globals) (:keyCallback @globals))
 
   (let [vidmode (GLFW/glfwGetVideoMode (GLFW/glfwGetPrimaryMonitor))]
@@ -100,7 +100,7 @@
 
 (defn main-loop
   []
-  (while (= (GLFW/glfwWindowShouldClose (:window @globals)) GLFW/GLFW_FALSE)
+  (while (not (GLFW/glfwWindowShouldClose (:window @globals)))
     (update-globals)
     (draw)
     (GLFW/glfwSwapBuffers (:window @globals))
@@ -113,8 +113,8 @@
     (init-window 800 600 "alpha")
     (init-gl)
     (main-loop)
+    (.free (:errorCallback @globals))
+    (.free (:keyCallback @globals))
     (GLFW/glfwDestroyWindow (:window @globals))
-    (.release (:keyCallback @globals))
     (finally
-      (GLFW/glfwTerminate)
-      (.release (:errorCallback @globals)))))
+      (GLFW/glfwTerminate))))
