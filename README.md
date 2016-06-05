@@ -12,8 +12,7 @@ The following setup echoes how I made the library work for my
 [shadertone](http://github.com/overtone/shadertone) project.  I
 haven't updated that to LWJGL3, yet, though.
 
-I have verified this works for LWJGL 3.0.0 build 90 on Mac/Linux.
-[will test on Windows soon, but should work]
+I have verified this works for LWJGL 3.0.0 build 90 on Mac/Linux/Windows.
 
 ## Your Own LWJGL Lib Setup
 
