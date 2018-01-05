@@ -81,7 +81,7 @@ Created .../hello_lwjgl/target/hello_lwjgl-0.4.0-standalone.jar
 Then you can run it with a commandline.
 
 ```bash
-> java -jar target/hello_lwjgl-0.2.0-SNAPSHOT-standalone.jar
+> java -jar target/hello_lwjgl-0.4.0-SNAPSHOT-standalone.jar
 ```
 
 ## Notes
