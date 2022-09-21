@@ -85,7 +85,7 @@
 
 (def all-dependencies
   (into ;; Add your non-LWJGL dependencies here
-   '[[org.clojure/clojure "1.8.0"]]
+   '[[org.clojure/clojure "1.11.1"]]
    (lwjgl-deps-with-natives)))
 
 (defproject hello_lwjgl "0.4.0"
