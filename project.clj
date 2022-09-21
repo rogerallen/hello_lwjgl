@@ -16,7 +16,7 @@
 (def LWJGL_NS "org.lwjgl")
 
 ;; Edit this to change the version.
-(def LWJGL_VERSION "3.1.5")
+(def LWJGL_VERSION "3.3.1")
 
 ;; Edit this to add/remove packages.
 (def LWJGL_MODULES ["lwjgl"
@@ -58,6 +58,17 @@
 (def no-natives? #{"lwjgl-egl" "lwjgl-jawt" "lwjgl-odbc"
                    "lwjgl-opencl" "lwjgl-vulkan"})
 
+
+
+(def no-natives-macos-arm64?
+  #{"lwjgl-openvr" "lwjgl-sse" "lwjgl-tootle"})
+
+
+
+;; this could probably be written in a more declarative way,
+;; but it works for this demo.
+;; For more robust customization options, visit
+;; https://www.lwjgl.org/customize
 (defn lwjgl-deps-with-natives []
   (apply concat
          (for [m LWJGL_MODULES]
@@ -65,9 +76,12 @@
              (into [prefix]
                    (if (no-natives? m)
                      []
-                     (for [p LWJGL_PLATFORMS]
+                     (for [p (if (no-natives-macos-arm64? m)
+                               LWJGL_PLATFORMS
+                               (conj LWJGL_PLATFORMS "macos-arm64"))]
                        (into prefix [:classifier (str "natives-" p)
                                      :native-prefix ""]))))))))
+
 
 (def all-dependencies
   (into ;; Add your non-LWJGL dependencies here
