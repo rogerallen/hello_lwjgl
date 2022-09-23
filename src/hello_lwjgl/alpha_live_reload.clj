@@ -1,4 +1,4 @@
-(ns hello-lwjgl.alpha
+(ns hello-lwjgl.alpha-live-reload
   (:import (org.lwjgl.opengl GL GL11)
            (org.lwjgl.glfw GLFW GLFWErrorCallback GLFWKeyCallback)))
 
@@ -52,7 +52,9 @@
      (/ (- (.width vidmode) width) 2)
      (/ (- (.height vidmode) height) 2))
     (GLFW/glfwMakeContextCurrent (:window @globals))
-    (GLFW/glfwSwapInterval 1)
+    ;; call (glfwSwapInterval 0) to temp fix lag while moving window on linux
+    ;; apparently this is an issue with nvidia drivers
+    (GLFW/glfwSwapInterval 0)
     (GLFW/glfwShowWindow (:window @globals))))
 
 (defn init-gl
@@ -67,9 +69,12 @@
   (GL11/glMatrixMode GL11/GL_MODELVIEW))
 
 
-(defn draw
-  []
-  (let [{:keys [width height angle]} @globals
+(def hot-draw (atom (fn [])))
+
+(reset!
+ hot-draw
+ (fn []
+   (let [{:keys [width height angle]} @globals
         w2 (/ width 2.0)
         h2 (/ height 2.0)]
     (GL11/glClear (bit-or GL11/GL_COLOR_BUFFER_BIT  GL11/GL_DEPTH_BUFFER_BIT))
@@ -85,7 +90,9 @@
       (GL11/glVertex2i -50 86.6)
       (GL11/glColor3f 0.0 0.0 1.0)
       (GL11/glVertex2i -50 -86.6))
-    (GL11/glEnd)))
+    (GL11/glEnd))
+   ))
+
 
 (defn update-globals
   []
@@ -104,13 +111,13 @@
   []
   (while (not (GLFW/glfwWindowShouldClose (:window @globals)))
     (update-globals)
-    (draw) 
+    (@hot-draw) 
     (GLFW/glfwSwapBuffers (:window @globals))
     (GLFW/glfwPollEvents)))
 
 (defn main
   []
-  (println "Run example Alpha")
+  (println "Run example Alpha with live reloading")
   (try
     (init-window 800 600 "alpha")
     (init-gl)
@@ -120,4 +127,3 @@
     (GLFW/glfwDestroyWindow (:window @globals))
     (finally
       (GLFW/glfwTerminate))))
-
