@@ -95,19 +95,6 @@
 
   ;; --- Live Code Reloading --- 
 
-  ;; You have the ability to live reload code using the repl,
-  ;; and thus dynamically change the render, while your app is running.
-  ;; It's pretty neat :).
-  
-  ;; If you want to take advantage of live reloading, your opengl app must
-  ;; run in a thread separate from the thread your repl is running in.
-  
-  ;; Use an atom to communicate between threads by using reset! on the draw
-  ;; function (or associated logic) within the repl thread, and dereference
-  ;; the draw function in your main opengl loop.
-  ;; See alpha-live-reload/main for an example.
-
-  ;; remember to use
   ;; (.start (Thread. (fn []))) instead of  (future & body)
   ;; for example, call the following within cider
   ;; to be able to play with live reloading
@@ -117,9 +104,5 @@
   ;; For OSX: lwjgl must be called from the main thread, so
   ;; start this project with 'lein run alpha-live-reload cider' and connect
   ;; to the repl in cider with M-x cider-connect.
-
-  ;; Reference
-  ;; https://stackoverflow.com/questions/38961679/how-to-inject-code-from-one-thread-to-another-in-clojure-for-live-opengl-editin
-  
   )
 

@@ -54,7 +54,7 @@
     (GLFW/glfwMakeContextCurrent (:window @globals))
     ;; call (glfwSwapInterval 0) to temp fix lag while moving window on linux
     ;; apparently this is an issue with nvidia drivers
-    (GLFW/glfwSwapInterval 0)
+    (GLFW/glfwSwapInterval 1)
     (GLFW/glfwShowWindow (:window @globals))))
 
 (defn init-gl
