@@ -1,4 +1,4 @@
-(require 'leiningen.core.eval)
+(require 'leiningen.core.utils)
 
 ;; per-os jvm-opts code cribbed from Overtone
 (def JVM-OPTS
@@ -9,7 +9,10 @@
 
 (defn jvm-opts
   "Return a complete vector of jvm-opts for the current os."
-  [] (let [os (leiningen.core.eval/get-os)]
+  ;; (leiningen.core.utils/get-os) is preferred over 
+  ;; (System/getProperty "os.name"), its output is a keyword contained within
+  ;; #{:macosx :linux :windows}
+  [] (let [os (leiningen.core.utils/get-os)]
        (vec (set (concat (get JVM-OPTS :common)
                          (get JVM-OPTS os))))))
 
@@ -85,7 +88,8 @@
 
 (def all-dependencies
   (into ;; Add your non-LWJGL dependencies here
-   '[[org.clojure/clojure "1.11.1"]]
+   '[[org.clojure/clojure "1.11.1"]
+     [leiningen "2.9.10"]]
    (lwjgl-deps-with-natives)))
 
 (defproject hello_lwjgl "0.4.0"
