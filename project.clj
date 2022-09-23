@@ -3,7 +3,7 @@
 ;; per-os jvm-opts code cribbed from Overtone
 (def JVM-OPTS
   {:common   []
-   :macosx   ["-XstartOnFirstThread" "-Djava.awt.headless=true"]
+   :macosx   ["-XstartOnFirstThread"]
    :linux    []
    :windows  []})
 
