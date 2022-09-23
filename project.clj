@@ -1,22 +1,25 @@
-(require 'leiningen.core.eval)
+(require 'leiningen.core.utils)
 
 ;; per-os jvm-opts code cribbed from Overtone
 (def JVM-OPTS
   {:common   []
-   :macosx   ["-XstartOnFirstThread" "-Djava.awt.headless=true"]
+   :macosx   ["-XstartOnFirstThread"]
    :linux    []
    :windows  []})
 
 (defn jvm-opts
   "Return a complete vector of jvm-opts for the current os."
-  [] (let [os (leiningen.core.eval/get-os)]
+  ;; (leiningen.core.utils/get-os) is preferred over 
+  ;; (System/getProperty "os.name"), its output is a keyword contained within
+  ;; #{:macosx :linux :windows}
+  [] (let [os (leiningen.core.utils/get-os)]
        (vec (set (concat (get JVM-OPTS :common)
                          (get JVM-OPTS os))))))
 
 (def LWJGL_NS "org.lwjgl")
 
 ;; Edit this to change the version.
-(def LWJGL_VERSION "3.1.5")
+(def LWJGL_VERSION "3.3.1")
 
 ;; Edit this to add/remove packages.
 (def LWJGL_MODULES ["lwjgl"
@@ -58,6 +61,17 @@
 (def no-natives? #{"lwjgl-egl" "lwjgl-jawt" "lwjgl-odbc"
                    "lwjgl-opencl" "lwjgl-vulkan"})
 
+
+
+(def no-natives-macos-arm64?
+  #{"lwjgl-openvr" "lwjgl-sse" "lwjgl-tootle"})
+
+
+
+;; this could probably be written in a more declarative way,
+;; but it works for this demo.
+;; For more robust customization options, visit
+;; https://www.lwjgl.org/customize
 (defn lwjgl-deps-with-natives []
   (apply concat
          (for [m LWJGL_MODULES]
@@ -65,13 +79,18 @@
              (into [prefix]
                    (if (no-natives? m)
                      []
-                     (for [p LWJGL_PLATFORMS]
+                     (for [p (if (no-natives-macos-arm64? m)
+                               LWJGL_PLATFORMS
+                               (conj LWJGL_PLATFORMS "macos-arm64"))]
                        (into prefix [:classifier (str "natives-" p)
                                      :native-prefix ""]))))))))
 
+
 (def all-dependencies
   (into ;; Add your non-LWJGL dependencies here
-   '[[org.clojure/clojure "1.8.0"]]
+   '[[org.clojure/clojure "1.11.1"]
+     [cider/cider-nrepl "0.28.6"]
+     [leiningen "2.9.10"]]
    (lwjgl-deps-with-natives)))
 
 (defproject hello_lwjgl "0.4.0"
